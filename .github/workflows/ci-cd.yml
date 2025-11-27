@@ -5,7 +5,6 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  # Manual trigger if you ever want to run it by hand
   workflow_dispatch:
 
 env:
@@ -13,9 +12,6 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
-  # ---------------------------
-  # 1) Security + basic checks
-  # ---------------------------
   security_and_tests:
     runs-on: ubuntu-latest
 
@@ -39,26 +35,20 @@ jobs:
         working-directory: backend
         run: |
           bandit -r . || true
-        # ^ change "|| true" to remove if you want the build to FAIL on findings
 
       - name: Safety dependency scan
         working-directory: backend
         run: |
           safety check --full-report || true
-        # ^ same note as above
 
       - name: Simple syntax check (compile all .py files)
         working-directory: backend
         run: |
           python -m compileall .
 
-  # ---------------------------
-  # 2) Build & push Docker image
-  # ---------------------------
   build_and_push:
     needs: security_and_tests
     runs-on: ubuntu-latest
-    # Only push images from main branch
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -81,9 +71,6 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-  # ---------------------------
-  # 3) Deploy to your lab VM
-  # ---------------------------
   deploy:
     needs: build_and_push
     runs-on: ubuntu-latest
@@ -97,15 +84,8 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            # go to your project folder on the VM (adjust if needed)
             cd /home/devasc/Stock_widget
-
-            # pull latest code
             git pull origin main
-
-            # login to Docker Hub (for future image-based deploys)
             docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
-
-            # restart stack using local docker-compose.yml
             docker compose down
             docker compose up -d --build
