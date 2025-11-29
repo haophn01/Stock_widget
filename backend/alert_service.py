@@ -7,7 +7,6 @@ from models import AlertRule, AlertEvent, StockPrice
 class AlertManager:
     """
     In-memory alert rule engine.
-
     - Stores alert rules.
     - On each price snapshot, evaluates rules.
     - Applies cooldown to avoid spamming.
