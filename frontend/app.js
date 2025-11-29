@@ -3,7 +3,7 @@
 // =========================
 
 const WS_URL = "ws://127.0.0.1:8000/ws/prices";
-const TRACKED_SYMBOLS = ["AAPL", "TSLA", "NVDA", "MSFT"];
+const TRACKED_SYMBOLS = ["AAPL", "TSLA", "NVDA", "MSFT", "BTC / USD"];
 
 // Front-end description of the static alert rules (matches backend config)
 const STATIC_ALERT_RULES = [

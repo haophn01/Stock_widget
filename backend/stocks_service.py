@@ -8,7 +8,7 @@ from urllib.request import urlopen
 
 from models import StockPrice
 
-DEFAULT_SYMBOLS = ["AAPL", "TSLA", "NVDA", "MSFT"]
+DEFAULT_SYMBOLS = ["AAPL", "TSLA", "NVDA", "MSFT", "BTC / USD"]
 
 # Global switch for mock mode.
 # Set this to True if you want the backend to use ONLY mock data
@@ -71,6 +71,7 @@ class StockPriceProvider:
             "TSLA": 180,
             "NVDA": 1100,
             "MSFT": 420,
+            "BTC / USD": 100000,
         }.get(symbol.upper(), 100)
 
         jitter = random.uniform(-3, 3)
