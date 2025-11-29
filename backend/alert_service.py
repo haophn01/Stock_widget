@@ -11,6 +11,7 @@ class AlertManager:
     - On each price snapshot, evaluates rules.
     - Applies cooldown to avoid spamming.
     - Keeps a small history of recent events.
+    - Testing delete later.
     """
 
     def __init__(self, rules: Dict[int, AlertRule]):
